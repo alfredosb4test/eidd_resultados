@@ -985,7 +985,7 @@ $(document).ready(function(){
                     $("#"+graf_activa).show();                
              
                 }
-    
+   
                 $("#contenido_resul").append(datos);
                 //$("#grafica").show().appendTo($("#contenido_resul"));
                 //$("#grafica_bar").css("display", "table");
@@ -1029,7 +1029,13 @@ $(document).ready(function(){
                 $jdep_t_trabajo_equipo = $jdep_t_comunicacion = $jdep_t_actitud_servicio = $jdep_t_orientacion_resultados = $jdep_t_analisis_problemas = $jdep_t_liderazgo = $jdep_t_organizacion = $jdep_t_negociacion = $jdep_t_toma_decisiones = $jdep_t_personal_formar = 0;
                 $enl_t_trabajo_equipo = $enl_t_comunicacion = $enl_t_actitud_servicio = $enl_t_orientacion_resultados = $enl_t_analisis_problemas = $enl_t_liderazgo = $enl_t_organizacion = $enl_t_negociacion = $enl_t_toma_decisiones = $enl_t_personal_formar = 0;
                 $ope_t_trabajo_equipo = $ope_t_comunicacion = $ope_t_actitud_servicio = $ope_t_orientacion_resultados = $ope_t_analisis_problemas = $ope_t_liderazgo = $ope_t_organizacion = $ope_t_negociacion = $ope_t_toma_decisiones = $ope_t_personal_formar = 0;                
-                       
+
+                $tr_administrador="";
+                $tr_subadministrador="";
+                $tr_jdepto="";
+                $tr_enlace="";
+                $tr_operativo="";
+
                 reset_matriz_graf_competencias();    // iguala a 0 las matrices de los valores 
                 graf_activa = "";                                 
                 for(var KeyData  in datos) {  
@@ -1049,7 +1055,7 @@ $(document).ready(function(){
                         (graf_SUPERIOR['toma_decisiones'] = $admin_t_toma_decisiones = datos[KeyData].toma_decisiones) ? $class_toma_decisiones = 'class="td_detalles_brechaxnivel hand"' : $class_toma_decisiones = '';
                         ($admin_t_personal_formar = datos[KeyData].personal_formar) ? $class_personal_formar = 'class="td_detalles_brechaxnivel hand"' : $class_personal_formar = '';
                         
-                        $tr_administrador = `<tr>
+                        $tr_administrador = `<tr class='tr_ADMINISTRADOR'>
                             <td>
                                 ADMINISTRADOR
                                 <div style="position:relative; float: right; padding-right:5px;" class="hover_rojo ver_grafica_chart" id="btn_container_superior">
@@ -1083,7 +1089,7 @@ $(document).ready(function(){
                         (graf_ALTO['toma_decisiones'] = $subadm_t_toma_decisiones = datos[KeyData].toma_decisiones) ? $class_toma_decisiones = 'class="td_detalles_brechaxnivel hand"' : $class_toma_decisiones = '';
                         ($subadm_t_personal_formar = datos[KeyData].personal_formar) ? $class_personal_formar = 'class="td_detalles_brechaxnivel hand"' : $class_personal_formar = '';
                                     
-                        $tr_subadministrador = `<tr>
+                        $tr_subadministrador = `<tr class='tr_SUBADMINISTRADOR'>
                             <td>
                                 SUBADMINISTRADOR
                                 <div style="position:relative; float: right; padding-right:5px;" class="hover_rojo ver_grafica_chart" id="btn_container_alto">
@@ -1115,7 +1121,7 @@ $(document).ready(function(){
                         (graf_NORMAL['toma_decisiones'] = $jdep_t_toma_decisiones = datos[KeyData].toma_decisiones) ? $class_toma_decisiones = 'class="td_detalles_brechaxnivel hand"' : $class_toma_decisiones = '';
                         ($jdep_t_personal_formar = datos[KeyData].personal_formar) ? $class_personal_formar = 'class="td_detalles_brechaxnivel hand"' : $class_personal_formar = '';
                                     
-                        $tr_jdepto = `<tr>
+                        $tr_jdepto = `<tr class='tr_JDEPTO'>
                             <td>
                                 JEFE DE DEPARTAMENTO
                                 <div style="position:relative; float: right; padding-right:5px;" class="hover_rojo ver_grafica_chart" id="btn_container_normal">
@@ -1147,7 +1153,7 @@ $(document).ready(function(){
                         (graf_EMERGENTE['toma_decisiones'] = $enl_t_toma_decisiones = datos[KeyData].toma_decisiones) ? $class_toma_decisiones = 'class="td_detalles_brechaxnivel hand"' : $class_toma_decisiones = '';
                         ($enl_t_personal_formar = datos[KeyData].personal_formar) ? $class_personal_formar = 'class="td_detalles_brechaxnivel hand"' : $class_personal_formar = '';
                                     
-                        $tr_enlace = `<tr>
+                        $tr_enlace = `<tr class='tr_ENLACE'>
                             <td>
                                 ENLACE
                                 <div style="position:relative; float: right; padding-right:5px;" class="hover_rojo ver_grafica_chart" id="btn_container_emergente">
@@ -1179,7 +1185,7 @@ $(document).ready(function(){
                         (graf_DEFICIENTE['toma_decisiones'] = $ope_t_toma_decisiones = datos[KeyData].toma_decisiones) ? $class_toma_decisiones = 'class="td_detalles_brechaxnivel hand"' : $class_toma_decisiones = '';
                         ($ope_t_personal_formar = datos[KeyData].personal_formar) ? $class_personal_formar = 'class="td_detalles_brechaxnivel hand"' : $class_personal_formar = '';
                                     
-                        $tr_operativo = `<tr>
+                        $tr_operativo = `<tr class='tr_OPERATIVO'>
                             <td>
                                 OPERATIVO
                                 <div style="position:relative; float: right; padding-right:5px;" class="hover_rojo ver_grafica_chart" id="btn_container_deficiente">
@@ -1296,8 +1302,15 @@ $(document).ready(function(){
                         grafica_uno([puestos[KeyNiveles]], [graf_SUPERIOR['trabajo_equipo'], graf_SUPERIOR['comunicacion'], graf_SUPERIOR['actitud_servicio'], graf_SUPERIOR['orientacion_resultados'], graf_SUPERIOR['analisis_problemas'], graf_SUPERIOR['liderazgo'], graf_SUPERIOR['organizacion'], graf_SUPERIOR['negociacion'], graf_SUPERIOR['toma_decisiones']], competencias, $colores_competencias, "container_superior");
                     }                                
 
-                    $("#"+graf_activa).show();  
+                    
                 }
+                // Encontrar en la tabla la primer coincidencia con la clase 'td_detalles_brechaxnivel' 
+                // y realizar un clic a la clase
+                $("#tbl_xniveles tbody tr").find(".td_detalles_brechaxnivel").each(function() {
+                     $(this).parent().find('.ver_grafica_chart').click();
+                     return false;
+                });
+ 
 
                 $("#contenido_resul").animate({opacity:1},'fast');
                 $("#ajax_respuesta").empty();
@@ -1324,9 +1337,93 @@ $(document).ready(function(){
              beforeSend:function(){ $("#ajax_respuesta").html($load); },     
              success: function(datos){
 
+                var datos = jQuery.parseJSON(datos);
+                $categoriesAdministrador=$categoriesSubadministrador=$categoriesDepto=$categories_Enlace=$categories_Operativo="";
+                $admin_t_trabajo_equipo = $admin_t_comunicacion = $admin_t_actitud_servicio = $admin_t_orientacion_resultados = $admin_t_analisis_problemas = $admin_t_liderazgo = $admin_t_organizacion = $admin_t_negociacion = $admin_t_toma_decisiones = $admin_t_personal_formar = 0;
+                $subadm_t_trabajo_equipo = $subadm_t_comunicacion = $subadm_t_actitud_servicio = $subadm_t_orientacion_resultados = $subadm_t_analisis_problemas = $subadm_t_liderazgo = $subadm_t_organizacion = $subadm_t_negociacion = $subadm_t_toma_decisiones = $subadm_t_personal_formar = 0;
+                $jdep_t_trabajo_equipo = $jdep_t_comunicacion = $jdep_t_actitud_servicio = $jdep_t_orientacion_resultados = $jdep_t_analisis_problemas = $jdep_t_liderazgo = $jdep_t_organizacion = $jdep_t_negociacion = $jdep_t_toma_decisiones = $jdep_t_personal_formar = 0;
+                $enl_t_trabajo_equipo = $enl_t_comunicacion = $enl_t_actitud_servicio = $enl_t_orientacion_resultados = $enl_t_analisis_problemas = $enl_t_liderazgo = $enl_t_organizacion = $enl_t_negociacion = $enl_t_toma_decisiones = $enl_t_personal_formar = 0;
+                $ope_t_trabajo_equipo = $ope_t_comunicacion = $ope_t_actitud_servicio = $ope_t_orientacion_resultados = $ope_t_analisis_problemas = $ope_t_liderazgo = $ope_t_organizacion = $ope_t_negociacion = $ope_t_toma_decisiones = $ope_t_personal_formar = 0;                
 
-                $("#contenido_resul").show().append(datos);
+                $tabla = `<center><h2>PERSONAL CON BRECHAS NEGATIVAS POR UNIDAD ADMINISTRATIVA</h2></center>
+                <table border="0" width="95%" class=" table table-condensed" style="padding:0px;" id="tbl_xniveles">
+                        <tr class='table_top_brecha'>
+                            <th style="text-align:center" id='th_ambito' width='11%'>UA</th>
+                            <th style="text-align:center">TRABAJO EN EQUIPO</th>
+                            <th style="text-align:center">COMUNICACION</th>
+                            <th style="text-align:center">ACTITUD DE SERVICIO</th>
+                            <th style="text-align:center">ORIENTACION A RESULTADOS</th>
+                            <th style="text-align:center">ANALISIS DE PROBLEMAS</th>
+                            <th style="text-align:center">LIDERAZGO</th>
+                            <th style="text-align:center">ORGANIZACION</th>               
+                            <th style="text-align:center">NEGOCIACION</th>
+                            <th style="text-align:center">TOMA DE DECISIONES</th>
+                            <!--<th>PERSONAL A FORMAR</th>-->
+                        </tr>`; 
+
+                reset_matriz_graf_competencias();    // iguala a 0 las matrices de los valores 
+                graf_activa = "";    
+                array_AG = new Array(); 
+
+                $class_trabajo_equipo = "";
+                for(var KeyData  in datos) {
+                    array_AG.push(datos[KeyData].trabajo_equipo,
+                                  datos[KeyData].comunicacion,
+                                  datos[KeyData].actitud_servicio,
+                                  datos[KeyData].orientacion_resultados,
+                                  datos[KeyData].analisis_problemas,
+                                  datos[KeyData].liderazgo,
+                                  datos[KeyData].organizacion,
+                                  datos[KeyData].negociacion,
+                                  datos[KeyData].toma_decisiones
+                                 );
+                        $descripion_ag = (datos[KeyData].descripcion_unidad) ? datos[KeyData].descripcion_unidad : datos[KeyData].unidad_negocio;
+                        (graf_DEFICIENTE['trabajo_equipo'] = $ope_t_trabajo_equipo = datos[KeyData].trabajo_equipo) ? $class_trabajo_equipo = 'class="td_detalles_brechaxnivel hand"' : $class_trabajo_equipo = '';
+                        (graf_DEFICIENTE['comunicacion'] = $ope_t_comunicacion = datos[KeyData].comunicacion) ? $class_comunicacion = 'class="td_detalles_brechaxnivel hand"' : $class_comunicacion = '';
+                        (graf_DEFICIENTE['actitud_servicio'] = $ope_t_actitud_servicio = datos[KeyData].actitud_servicio) ? $class_actitud_servicio = 'class="td_detalles_brechaxnivel hand"' : $class_actitud_servicio = '';
+                        (graf_DEFICIENTE['orientacion_resultados'] = $ope_t_orientacion_resultados = datos[KeyData].orientacion_resultados) ? $class_orientacion_resultados = 'class="td_detalles_brechaxnivel hand"' : $class_orientacion_resultados = '';
+                        (graf_DEFICIENTE['analisis_problemas'] = $ope_t_analisis_problemas = datos[KeyData].analisis_problemas) ? $class_analisis_problemas = 'class="td_detalles_brechaxnivel hand"' : $class_analisis_problemas = '';
+                        (graf_DEFICIENTE['liderazgo'] = $ope_t_liderazgo = datos[KeyData].liderazgo) ? $class_liderazgo = 'class="td_detalles_brechaxnivel hand"' : $class_liderazgo = '';
+                        (graf_DEFICIENTE['organizacion'] = $ope_t_organizacion = datos[KeyData].organizacion) ? $class_organizacion = 'class="td_detalles_brechaxnivel hand"' : $class_organizacion = '';
+                        (graf_DEFICIENTE['negociacion'] = $ope_t_negociacion = datos[KeyData].negociacion) ? $class_negociacion = 'class="td_detalles_brechaxnivel hand"' : $class_negociacion = '';
+                        (graf_DEFICIENTE['toma_decisiones'] = $ope_t_toma_decisiones = datos[KeyData].toma_decisiones) ? $class_toma_decisiones = 'class="td_detalles_brechaxnivel hand"' : $class_toma_decisiones = '';                    
+                    $tabla += `<tr>
+                            <td>
+                                ${ $descripion_ag } 
+                            </td>
+                            <td align="center" width="6%" ${ $class_trabajo_equipo} nivel="Operativo" comp="trabajo_equipo"> ${ datos[KeyData].trabajo_equipo }</td>
+                            <td align="center" width="6%" ${ $class_comunicacion} nivel="Operativo" comp="comunicacion"> ${ datos[KeyData].comunicacion }</td>
+                            <td align="center" width="6%" ${ $class_actitud_servicio} nivel="Operativo" comp="actitud_servicio"> ${ datos[KeyData].actitud_servicio }</td>
+                            <td align="center" width="6%" ${ $class_orientacion_resultados} nivel="Operativo" comp="orientacion_resultados"> ${ datos[KeyData].orientacion_resultados }</td>
+                            <td align="center" width="6%" ${ $class_analisis_problemas} nivel="Operativo" comp="analisis_problemas"> ${ datos[KeyData].analisis_problemas }</td>
+                            <td align="center" width="6%" ${ $class_liderazgo} nivel="Operativo" comp="liderazgo"> ${ datos[KeyData].liderazgo }</td>
+                            <td align="center" width="6%" ${ $class_organizacion} nivel="Operativo" comp="organizacion"> ${ datos[KeyData].organizacion }</td>                
+                            <td align="center" width="6%" ${ $class_negociacion} nivel="Operativo" comp="negociacion"> ${ datos[KeyData].negociacion }</td>
+                            <td align="center" width="6%" ${ $class_toma_decisiones} nivel="Operativo" comp="toma_decisiones"> ${ datos[KeyData].toma_decisiones }</td>
+                            </tr>`;                    
+                }
+
+
+
+                $("#contenido_resul").show().append($tabla);
                 $("#contenido_resul").animate({opacity:1},'fast');
+
+                $("#tbl_xniveles").find(".td_detalles_brechaxnivel").attr({
+                    btn: "brechasxadmin",
+                    usr_ag: "'"+obj.g_ags+"'",                      
+                    perfil_final: 'perfil_final',
+                    puesto_nivel: datos[KeyData].unidad_negocio.toUpperCase(),
+                    ambito: obj.g_nivel.toUpperCase(),
+                    descripcion_unidad: obj.g_unidades_permisos,  
+                    id_ag: "id_ag",
+                    id_ag_4 : "id_ag_4",
+                    vista: "vista",
+                    g_nivel: obj.g_nivel,
+                    "data-toggle": "modal",
+                    "data-target": "#detalles_usr",
+                    "data-whatever": datos[KeyData].unidad_negocio
+                }).addClass('td_detalles_central hand');
+
                 $("#ajax_respuesta").empty();
                 $('.btn_menu').bind('click',$btn_click);                
              },
@@ -1722,7 +1819,13 @@ $(document).ready(function(){
             modal.find('.modal-title').text($nivel+" | "+$comp)
             $datos = "tipo_busqueda=detalles_xunidad&usr_ag="+$usr_ag+"&perfil_final="+$perfil_final+"&ambito="+$ambito+"&descripcion_unidad="+$descripcion_unidad+"&id_ag="+$id_ag+"&id_ag_4="+$id_ag_4+"&vista="+$vista+"&nivel="+$nivel+"&comp="+$comp 
         }        
-        
+        if($btn == "brechasxadmin"){
+            $url = 'detalles_usr_brechaxUA';
+            $nivel = button.attr('nivel');
+            $comp = button.attr('comp');
+            modal.find('.modal-title').text($nivel+" | "+$comp)
+            $datos = "tipo_busqueda=detalles_xunidad&usr_ag="+$usr_ag+"&perfil_final="+$perfil_final+"&ambito="+$ambito+"&descripcion_unidad="+$descripcion_unidad+"&id_ag="+$id_ag+"&id_ag_4="+$id_ag_4+"&vista="+$vista+"&nivel="+$nivel+"&comp="+$comp 
+        }
  
         $.ajax({    
          type: "GET",
@@ -1739,7 +1842,7 @@ $(document).ready(function(){
             cont_cabecera = $("<div class='con_t_th table_top_modal'></div>");
             cont_cabecera.append('<div class="t_tr negritas" style="width:70px;height:37px; text-align:center;"># EMP.</div>');
             cont_cabecera.append('<div class="t_tr negritas t_underline hand" onclick="ordenar_tr_xunidad('+$usr_ag+', \''+$ambito+'\', \''+$descripcion_unidad+'\', \''+$perfil_final+'\', \'ORDER BY uni.nombre \', \''+$id_ag+'\', \''+$id_ag_4+'\', \''+$vista+'\')" style="width:458px;height:37px; text-align:center;">NOMBRE</div>');
-            if($btn != "brechaxnivel"){
+            if($btn != "brechaxnivel" && $btn != "brechasxadmin"){
                 cont_cabecera.append('<div class="t_tr negritas t_underline hand" onclick="ordenar_tr_xunidad('+$usr_ag+', \''+$ambito+'\', \''+$descripcion_unidad+'\', \''+$perfil_final+'\', \'ORDER BY uni.fcal_360 \', \''+$id_ag+'\', \''+$id_ag_4+'\', \''+$vista+'\')" style="width:70px;height:37px; text-align:center;">fcal 360</div>');
                 cont_cabecera.append('<div class="t_tr negritas t_underline hand" onclick="ordenar_tr_xunidad('+$usr_ag+', \''+$ambito+'\', \''+$descripcion_unidad+'\', \''+$perfil_final+'\', \'ORDER BY uni.fcal_indicadores \', \''+$id_ag+'\', \''+$id_ag_4+'\', \''+$vista+'\')" style="width:90px;height:37px; text-align:center;">fcal INDICADORES</div>');
                 cont_cabecera.append('<div class="t_tr negritas t_underline hand" onclick="ordenar_tr_xunidad('+$usr_ag+', \''+$ambito+'\', \''+$descripcion_unidad+'\', \''+$perfil_final+'\', \'ORDER BY uni.fcal_entorno \', \''+$id_ag+'\', \''+$id_ag_4+'\', \''+$vista+'\')" style="width:90px;height:37px; text-align:center;">fcal ENTORNO</div>');
@@ -1748,7 +1851,7 @@ $(document).ready(function(){
             modal.find(".modal_contenido").append(cont_cabecera);
            // modal.find(".modal_contenido").append('<div style="position:relative; height:39px;width:850px;"></div>');   // salto de linea 
             for(var myKey in datos) {
-                if($btn == "brechaxnivel"){
+                if($btn == "brechaxnivel" || $btn == "brechasxadmin"){
                     cont_fila = $("<div class='cont_fila' style='width:856px;'></div>");
                     cont_fila.append("<div class='t_tr bleft' style='width:70px;'>"+datos[myKey].id_empleado+"</div>");                
                     cont_fila.append("<div class='t_tr bright' style='width:780px'><a class='screenshot hand t_negro' rel='"+$url_fotos+datos[myKey].id_empleado+".jpg'>"+datos[myKey].nombre+"</a></div>");                             
@@ -1779,7 +1882,11 @@ $(document).ready(function(){
         });      
     });
 
+/*********************************************************************************************************************************************/
+/********************************************************* detalles_usr *********************************************************************/
 
+/********************************************************* detalles_usr *********************************************************************/
+/*********************************************************************************************************************************************/
     $('#detalles_usr_vs').on('hidden.bs.modal', function (e) {
       $("#div_rombo").appendTo($('#div_cont_rombo'));
     }) 

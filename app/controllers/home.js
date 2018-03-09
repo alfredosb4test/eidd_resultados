@@ -994,7 +994,7 @@ console.log("2: ");
 			$unidad_permisos = "";
 		else{
 			if($descripcion_unidad_permisos.length >= 8 && $g_nivel != "Central_Local")
-				$unidad_permisos = "AND vs.id_ag IN("+$descripcion_unidad_permisos+")";
+				$unidad_permisos = "AND id_ag IN("+$descripcion_unidad_permisos+")";
 			else{
 				console.log("3: "); 
 				if($g_nivel == 'Central_Local')
@@ -1100,7 +1100,7 @@ router.get('/resultados_x_brechasxnivel', function(req, res, next) {
 			WHERE unidad_negocio IN (${$usr_ag}) ${$unidad_permisos}
 			GROUP BY puesto_nivel`; 
 
-	console.log("SQL resultados_eidd_xnivel: "+$sql); 
+	console.log("SQL resultados_eidd_brechasxnivel: "+$sql); 
     connectionManager.getConnection()
         .then(function (connection) {
 
@@ -1493,8 +1493,61 @@ router.get('/detalles_usr_brechaxnivel_jerarquico', function(req, res, next) {
 				FROM tbl_brechas bre, tbl_ficha_2
 				WHERE bre.id_empleado = tbl_ficha_2.num_empleado AND unidad_negocio IN(${$usr_ag}) ${$unidad_permisos} AND 
 				bre.puesto_nivel='${$puesto_nivel}' AND ${$campo_competencia}=1`;
- 
+
+
 	console.log("SQL resultados_eidd_detalles_usr_vs: "+$sql); 
+    connectionManager.getConnection()
+        .then(function (connection) {
+
+            connection.query($sql, function (error, results) {
+                if (error) 
+                    console.error(error);   
+				
+				numRows = results.length; 
+				console.log(results[0]);
+				if(numRows){
+	                var proj = JSON.stringify(results);
+	                console.log(proj); 
+					res.json(proj);	
+				}	
+				connection.end(); 
+			});
+		});	
+});
+
+router.get('/detalles_usr_brechaxUA', function(req, res, next) {
+	// $usr_ag, $ambito, $perfil_final_2012_2013, $perfil_final, $descripcion_unidad_permisos, $g_nivel, $orderby='ORDER BY vs.nombre'
+	$usr_ag = req.query.usr_ag;
+	$ambito = req.query.ambito;
+	$descripcion_unidad_permisos  = req.query.descripcion_unidad; 	
+	$perfil_final  = req.query.perfil_final;	
+	$puesto_nivel = req.query.puesto_nivel;	
+	$g_nivel = req.session.g_nivel;	
+	$orderby = "ORDER BY niv.nombre";	
+ 	$puesto_nivel = req.query.nivel;	
+ 	$campo_competencia = req.query.comp;	
+		if($descripcion_unidad_permisos == "'GENERAL'")
+			$unidad_permisos = "";
+		else{
+			if($descripcion_unidad_permisos.length >= 8 && $g_nivel != "Central_Local")
+				$unidad_permisos = "AND tbl_ficha_2.id_ag IN("+$descripcion_unidad_permisos+")";
+			else{ 
+				if($g_nivel == 'Central_Local')
+					$unidad_permisos = "AND (tbl_ficha_2.id_ag_4 IN("+$descripcion_unidad_permisos+") )";
+				if($g_nivel == 'Central' || $g_nivel == 'Local')
+					$unidad_permisos = "AND tbl_ficha_2.id_ag_4 IN("+$descripcion_unidad_permisos+")";					
+			}
+		}	
+
+		$g_unidades_permisos = req.session.g_unidades_permisos;	
+						
+		$sql = `SELECT bre.id_empleado, bre.puesto_nivel, bre.nombre, tbl_ficha_2.descripcion_unidad_admin as desc_unidad , tbl_ficha_2.puesto_nivel as puesto_nivel2
+				FROM tbl_brechas bre, tbl_ficha_2
+				WHERE bre.id_empleado = tbl_ficha_2.num_empleado AND unidad_negocio IN(${$usr_ag}) ${$unidad_permisos} AND 
+				${$campo_competencia}=1`;
+
+
+	console.log("SQL detalles_usr_brechaxUA: "+$sql); 
     connectionManager.getConnection()
         .then(function (connection) {
 
