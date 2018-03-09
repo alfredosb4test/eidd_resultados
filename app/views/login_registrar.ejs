@@ -1,0 +1,143 @@
+<% include header %>
+
+
+<script type="text/javascript">
+var error=0;
+$( document ).ajaxError(function( event, request, settings ) {
+  $("#ajax_respuesta").show().append( "<strong>Error: </strong>" + settings.url );
+});
+$(document).ready(function(e) {
+	$altura_contenido = $(window).height();
+	$altura_contenido -= 45;
+	//alert($altura_contenido);
+ 	$("#logo").css({'top':$altura_contenido +"px"});	
+ 	$("#pwd_reg_1").focus();
+	$("#btn_ingresar").click(function(event) {
+		error=0;
+
+		$pwd_reg_1=$('#pwd_reg_1').val();
+		$pwd_reg_2=$('#pwd_reg_2').val();
+ 		$num_emp=$('#num_emp').val();
+
+		//alert(txt_id+' '+txt_folio+' '+txt_guia);  return;
+		valida_campo2(["pwd_reg_1","pwd_reg_2"],'','','',["pwd_reg_1","pwd_reg_2"], ["#FFCC00"], ["#FFF"]);	
+		//valida_campo2(["pwd_reg_2"],'','','',["pwd_reg_2"], ["#FFCC00"], ["#FFF"]);			
+		if(error){ 
+			$('#ajax_respuesta_registro').html('<h4><span class="alert alert-danger">Hay campos vacios.</span></h4>');
+			event.preventDefault();
+			return;
+		}
+		
+		if($pwd_reg_1 != $pwd_reg_2){  
+			$('#ajax_respuesta_registro').html('<h4><span class="alert alert-danger">No coinciden las Contrase&ntilde;as</span></h4>');
+			event.preventDefault();
+			return;
+		}
+
+		/*
+		$.ajax({
+		 type: "POST",
+		 url: "/registrar_pwd",
+		 data: "num_emp="+$num_emp+"&pwd_reg_1="+$pwd_reg_1,
+		 //beforeSend:function(){$("#ajax_respuesta").html($load);},	 
+		 success: function(json){
+		 	json = jQuery.parseJSON(json);
+			try {
+				if(json.tipo == "ok_update"){ 
+					$("#ajax_respuesta").html('<div class="msg alerta_err">Contraseña actualizada</div>');
+				}
+				if(json.tipo == "pwd_ocupado"){ 
+					$("#ajax_respuesta").html('<div class="msg alerta_err">Contraseña no disponible</div>');
+				}
+				if(json.tipo == "updateOK"){ 
+					//$( document ).ajaxStop();
+					//$.get("/registrado_ok",function (data){ //$('#test').html(data)  });
+				}	
+				if(json.tipo == "error_sql" || json.tipo == "error_parametros" || json.tipo == "error_execute"){ 
+					$("#ajax_respuesta").html("Error con la BD.")
+				}
+			}
+			catch (e) {
+			  $("#ajax_respuesta").show().empty().append("<strong>Error al cargar la pagina</strong>");
+			};		 	
+		 },
+		 timeout:90000,
+		 error: function(){ 					
+				$("#ajax_respuesta").html('<div class="msg alerta_err">Problemas con el Servidor</div>');
+			}	   
+		});
+		*/			
+	});
+});
+ 
+</script>
+
+<div class="jumbotron" id="login_head">
+	<div id="logo_top_bg1">
+		<img src="img/logo_SHCP2.png" width="166" height="46"> 
+	</div>
+	<div id="logo_top_bg2"> 
+		<img src="img/logo_SAT.png" width="201" height="44">
+	</div>	
+	<div id="logo">
+		<img src="img/nodejs.png" width="60" height="37">
+	</div>
+</div>
+
+<h1 style="margin-left:15px;"><i class="fa fa-user-plus  " aria-hidden="true"></i>Registro</h1>
+<hr>
+<br>
+<div id="cont_form_login_reg"> 
+  <form class="form" id="frm_registrar"  method="POST" action="/registrar_pwd" >
+  	<table class="table" style="width:450px;" >
+  		<tr>
+  			<td style="border:0;">
+  			
+	 		<h2><label><%=g_usuario%></label></h2>
+	 	 	</td>
+	 	</tr>
+	</table> 	
+	<table class="table" style="width:280px;" > 	
+	 	<tr> 	
+	 		<td style="border:0;">
+			<div class="form-group"> 
+			    <div class="input-group">
+			      <div class="input-group-addon" style=" width:100px">Contraseña</div>	
+					<input type="hidden" class="form-control text_box" id="num_emp" name="num_emp" value="<%=g_num_emp%>" style="width:135px;" >     
+			      	<input type="password" class="form-control text_box" id="pwd_reg_1" name="pwd_reg_1" maxlength="10" style="width:135px;"> 
+			    </div>
+			</div> 
+ 			</td>
+	 	</tr>
+	 	<tr>  			
+ 			<td style="border:0;">
+			<div class="form-group"> 
+			    <div class="input-group">
+			      <div class="input-group-addon" style=" width:100px">Confirmar</div>	   
+			      	<input type="password" class="form-control text_box" id="pwd_reg_2" name="pwd_reg_2"  maxlength="10" style="width:135px;"> 
+			    </div>
+			</div> 
+ 			</td>
+	 	</tr>
+	 	<tr>  			
+			<td align="right" style="border:0;">
+				<input type="submit" class="btn btn-outline-primary hand" id="btn_ingresar" value="Resgistrar">
+	 		</td>
+	 	</tr> 			
+ 	</table>
+  </form>
+  
+  <div id="ajax_respuesta_registro"></div>
+</div> 
+
+ 
+
+	<div id="ajax_respuesta" style="position: relative; clear:both; margin:0 auto; z-index:10; padding-left:5px;"> 
+		 
+		<%if (error.length > 0) { %>
+			 
+			<h4><span class="alert label-danger">Contraseña no disponible</span></h4>
+		<% } %>		
+	</div>
+
+<% include footer %>

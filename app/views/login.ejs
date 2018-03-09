@@ -1,0 +1,104 @@
+<% include header %>
+
+ 
+<script type="text/javascript">
+var error=0;
+$( document ).ajaxError(function( event, request, settings ) {
+  $("#ajax_respuesta").show().append( "<strong>Error: </strong>" + settings.url );
+});
+$(document).ready(function(e) {
+	$altura_contenido = $(window).height();
+	$altura_contenido -= 45;
+	//alert($altura_contenido);
+ 	$("#logo").css({'top':$altura_contenido +"px"});
+ 	$("#txt_username").focus();
+ 	$("#btn_ingresar").click(function(event) {
+ 		
+ 		$txt_username = $("#txt_username").val(); 		
+ 		error=0;
+ 		valida_campo2(["txt_username"],'','','',["txt_username"], ["#FFFF0A"], ["#FFFF0A"]);	
+ 		
+		if(error){
+			//alert(error)
+			event.preventDefault();
+			//$("#frm_login").submit(function(e) { return false; });	//e.preventDefault();
+			$('#txt_username').focus();
+			return;
+		}
+		//alert($txt_username)
+		//$("#frm_login").submit(function(e) { return true; });
+		//$("#frm_login").submit();
+ 	});
+});
+ 
+</script>
+
+<div class="jumbotron jumbotron-fluid" id="login_head">
+
+  <div class="container">
+
+    <div class="row">
+        <div class="col-md-4" style="top:6px; ">
+             <img src="img/top_bg1.png"  >
+        </div>
+        <div class="col-md-5" style="top:6px;background-image:url(img/logo_SAT.png); background-repeat:no-repeat">
+            <!-- <img src="img/logo_SAT.png"   height="65"> -->
+        </div>
+        <div class="col-md-3" style="top:6px;">
+            <img src="img/logo_SAT_20.png"   height="80">
+        </div>
+        
+    </div>
+
+    
+  </div>
+</div>
+
+<div id="cont_form_login" style="margin-top:50px; background-color:#FFF;">
+	<div style="position:relative; float:left; background-color:#FFF; top:20px;">
+		<h1 style="color:#AEAEAE;font-size:70px;"><strong>EIDD Proceso</strong></h1>
+		<h1 style="color:#1973AB; font-size:70px;"><strong>2016 - 2017</strong></h1>
+	</div> 
+
+	<div style="position:relative; float:left; margin: 62px 0 0 50px; width:250px; background-color:#FFF">
+		 <form class="form" id="frm_login"  method="POST" action="/login" >
+			<div class="form-group"> 
+			    <div class="input-group">
+			      <div class="input-group-addon"><i class="fa fa-user-circle-o fa-2x" aria-hidden="true"></i></div>
+			   
+			      	<input type="password" class="form-control text_box" value="16811" id="txt_username" name="username" placeholder="usuario" maxlength="10" style="width:180px;">
+		 			<input type="text" class="hide" name="password" value="0" id="txt_password">
+		 			<input type="text" class="hide" name="rnd" value="<?=rand();?>">
+			    </div> 
+			</div>  
+		 
+			 <div style="position:relative; float:right; top:0px; clear:both;"> 
+			 	<button type="submit" class="btn btn-outline-primary hand" id="btn_ingresar">Ingresar</button>
+			 </div>	
+		 </form>
+	</div>	
+ 			 <% if (msg_err != "") { %>
+ 			 	
+				 <div style="position:relative; top:0px; clear:both;  ">
+				 <br>
+				 <hr>
+				 	<h5>
+				 		<span class="alert alert-danger" id="err_login">
+				 			<i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+				 			<%=msg_err%>
+				 		</span>
+				 	</h5>
+				 </div>	
+			 <% } %>	 
+</div> 
+
+<hr>
+16811 - General <br>
+2815 - Central <br>
+52 - Amin <br>
+44 - Local	 <br>
+
+
+	<div id="ajax_respuesta" style="position: relative; clear:both; margin:0 auto; z-index:10; padding-left:5px;">  </div>
+
+<% include footer %>

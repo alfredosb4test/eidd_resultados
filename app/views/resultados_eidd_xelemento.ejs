@@ -1,0 +1,240 @@
+<script> 
+    var obj = <%- JSON.stringify(obj) %> //JSON.stringify(sesion);
+    //alert(JSON.stringify(obj))
+    // variables para mostrar en los graficos los años
+    var fecha = new Date();
+    var anoAnterior = fecha.getFullYear() -1;
+    var anoActual = fecha.getFullYear();
+</script>
+<script src="js/index.js"></script>
+<script> 
+/*$(document).ready(function(){
+    $("#btn_elemento").click();
+});*/
+</script>
+
+<style type="text/css">
+#container, #sliders {
+    min-width: 310px; 
+    max-width: 800px;
+    margin: 0 auto;
+}
+#container {
+    height: 400px; 
+}
+</style>
+<div id="wrap">
+    <div id="bar_top">
+
+    	 <div id="bar_menu" style="position:relative; width:84%; height:28px; float:left; top:1px;">
+         		<div class="btn_menu" id="btn_unidad" align="center"><span class="contenido_menu">Por Unidad</span></div>
+                <div class="btn_menu" id="btn_elemento" align="center"><span class="contenido_menu">Por Elemento</span></div>
+         		<div class="btn_menu" id="btn_vs" align="center"><span class="contenido_menu">Comp. <span class="font_small1">2014 vs 2015</span></span></div>
+                <div class="btn_menu" id="btn_nivel" align="center"><span class="contenido_menu">Resumen por Nivel</span></div>         		
+                <div class="btn_menu" id="btn_brechasxadmin" align="center"><span class="contenido_menu">Brechas por UA</span></div>
+                <div class="btn_menu" id="btn_brechasxnivel" align="center"><span class="contenido_menu">Brechas</span></div>         		
+                <div class="btn_menu" id="btn_brechasxpers" align="center"><span class="contenido_menu">Brecha (Personal)</span></div>
+                <div class="btn_menu" id="btn_individual" align="center"><span class="contenido_menu">Ficha Individual</span></div>
+         </div>	
+        
+        
+    	 <div id="" style="position:relative; float:right; margin:1px 6px 0 0px;width:10%; ">
+         <div id="visitas" style="position:absolute;z-index:1000;float:; width:100px;margin:0 0 0 -50px;display:none" class="hand"><img src="img/graficas.png" width="32" height="32" alt="Visitas" title="Visitas"></div>
+         	<div id="cont_btn" style="position:relative; float:right; width:86px;">
+                <div style="width:28px; height:28px;float:left;" class="boton hand" id="font_size_mas">
+                    <img src="img/btn_font_mas.png" border="0" style="position: absolute;">
+                </div> 
+                <div style="width:28px; height:28px;float:left;" class="boton" id="font_size_menos">
+                    <img src="img/btn_font_menos.png" border="0" style="position: absolute;">
+                </div>                     	 	
+                <div style="width:28px; height:28px;float:left;" class="boton" id="cerrar_sistema">
+                    <img src="img/cerrar_1.png" border="0" style="position: absolute;" >
+                </div>
+            </div>
+         </div> 
+
+
+    </div>
+ 
+	<div id="contenido">   
+		<div id="contenido_resul" style=" position:relative;border:#666666 solid 1px; display:none; width:99.9%; height:97%; margin:0 auto; top:2px; padding:1px; overflow-y: scroll; float:right;">
+            Por Elemento
+        </div>
+
+
+        <div id="grafica" style="position:relative; top:20px; display:none">
+
+
+            <div id="grafica_bar" style="position:relative;margin:0; width:100%; float:left; display: table">
+                <i class="fa fa-bar-chart fa-2x hand" style="margin-left:20px" id="btn_graf_bar" aria-hidden="true"></i>
+                <br>
+                <i class="fa fa-pie-chart fa-2x hand" style="margin-left:20px" id="btn_graf_pie" aria-hidden="true"></i>            
+                <table width="60" border="0" id="controles_graf"  style="position: absolute; margin: 50px 0 0 20px;">
+                    <tr>
+                        <td><div id="slider-R0"></div></td>
+                        <td><div id="slider-R1"></div></td>
+                    </tr> 
+                </table>
+            </div>
+            <div id="container" style="height: 400px; margin: 0 auto"></div>
+
+            <div id="grafica_pie" style="position:relative; margin:0 auto; display: table; display:none" align="center">
+                <div id="container_pie_L" style="width: 550px; height: 450px; margin: 0 auto; float:left; display:none"></div>
+                <div id="container_pie_C" style="width: 550px; height: 450px; margin: 0 auto; float:left; display:none"></div>
+            </div>    
+        </div>
+    </div>
+  
+    <div id="pie">
+    	<div id="g_nombre" style="position:relative; width:35%; float:left; top:4px; font-size:16px; margin-left:3px;"></div>
+    	<div id="g_nombre_host" style="position:relative;float:left; width:35%; top:4px; font-size:16px"></div>    
+        <div id="inf_usr" style="position:relative;float:left; width:22%; top:2px;">
+    		<div id="ajax_respuesta" style="position:relative; float:right"></div>
+        </div>
+    </div>
+</div>
+<div id="btn_capa" style="position:absolute; width:28px; height:28px;  display: none"><img src="img/btn_capa.png" border="0" ></div>
+<input type="hidden" id="txt_ag" size="300">
+<input type="hidden" id="txt_ambito" value="">
+<input type="hidden" id="txt_id_unidad" value="">
+<input type="hidden" id="txt_proceso">
+<input type="hidden" id="txt_nivel">
+
+<input type="hidden" id="txt_NumEmp" />
+<input type="hidden" id="txt_nombre" />
+<input type="hidden" id="txt_grado" />
+<input type="hidden" id="txt_puesto" />
+
+<!--  DIV para Ventana pop -->
+
+<div class="modal fade bs-example-modal-lg " id="detalles_usr" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog modal-lg detalles_usr" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+
+        <h4 class="modal-title" id="exampleModalLabel">New message</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        
+      </div>
+      <div class="modal-body">
+        
+        <div class="modal_contenido" style="position: relative; overflow-y: scroll; overflow-x: hidden; height:400px;">
+        
+        </div>
+
+        <div id="div_rombo" style="display:none">
+
+            <div style=" width:652px; height:400px; position:relative; margin:0 auto;color:#FFFFFF; background-color:#FFF;font-size:12px;">
+                <div style=" width:650px; position:relative; margin:0 auto;color:#FFFFFF; background-color:#2aa10c; padding-left:2px"> <!--28343b-->
+                    <?=$_POST['nombre'];?>
+                </div>
+                <div class="niveles" id="nivel_puntero" style="width:130px; height:62px; position: absolute; margin:0 0 0 630px; padding:0; z-index:10; display:">
+                    <img src="img/niveles_puntero.png" border="0" height="62" width="53" style=" margin-top:1px"/>
+                    <span class="t_negro negritas nota_calif" style="position:absolute; margin:17px 0 0 4px;" ></span>      
+                </div> 
+
+                             
+                <div id="cont_niveles" style=" width:645px; height:362px; background-color: #333; position:relative; margin:0 auto;color:#CCC" class="fondo_rombo">
+                    <input type="hidden" id="txt_perfil_final" value="<?=$_POST['perfil_final'];?>" />
+                    <input type="hidden" id="calif" value="<?=$_POST['calif'];?>" />
+              
+                    <div id="niveles_sup_alto" style="border: #000 3px dashed; width:325px; height:108px; position:absolute;">
+                        <div style="width:170px; margin:30px 0 0 0px; position:absolute; text-align:center; font-size:18px">
+                            <strong>Talento<br />Distintivo</strong>
+                        </div>
+                        
+                        <div class="etiquetas_niveles" id="niveles_defi" style="border: #F00 3px solid; width:0px; height:58px; position:absolute; margin:302px 0 0 321px;">
+                            <div class="etiqueta_nivel" style="width:170px; margin:10px 0 0 150px; position:absolute; text-align:center;">
+                                <strong>Calificacion Final:</strong><br />0 - 73.10
+                            </div>
+                        </div>
+                        
+                        <div class="etiquetas_niveles" id="niveles_emergente" style="border: #E4D28B 3px solid; width:0px; height:52px; position:absolute; margin:253px 0 0 321px;">
+                            <div class="etiqueta_nivel" style="width:170px; margin:6px 0 0 150px; position:absolute; text-align:center;">
+                                <strong>Calificacion Final:</strong><br />73.11 - 78.60
+                            </div>        
+                        </div>
+                        
+                        <div class="etiquetas_niveles" id="niveles_normal" style="border: #06C 3px solid; width:0px; height:154px; position:absolute; margin:102px 0 0 321px;">
+                            <div class="etiqueta_nivel" style="width:170px; margin:50px 0 0 150px; position:absolute; text-align:center;">
+                                <strong>Calificacion Final:</strong><br />78.61 - 89.60
+                            </div>
+             
+                        </div>
+                        
+                        <div class="etiquetas_niveles" id="niveles_alto" style="border: #0C0 3px solid; width:0px; height:48px; position:absolute; margin:57px 0 0 321px;">
+                            <div class="etiqueta_nivel" style="width:170px; margin:5px 0 0 150px; position:absolute; text-align:center;">
+                                <strong>Calificacion Final:</strong><br />89.61 - 95.10
+                            </div>          
+                        </div>
+                        <div class="etiquetas_niveles" id="niveles_sup" style="border: #060 3px solid; width:0px; height:62px; position:absolute; margin:-2px 0 0 321px;">
+                            <div class="etiqueta_nivel" style="width:170px; margin:8px 0 0 150px; position:absolute; text-align:center;">
+                                <strong>Calificacion Final:</strong><br />95.11 - 100
+                            </div>         
+                        </div>
+                        
+                    </div>
+                    <div id="niveles_nor_emer" style="border: #000 3px dashed; width:320px; height:200px; position:absolute; margin:105px 0 0 0;">
+                        <div style="width:170px; margin:130px 0 0 0px; position:absolute; text-align:center; font-size:18px">
+                            <strong>Desarrollo</strong>
+                        </div>    
+                    </div>
+                    
+                    
+                    
+                    
+                    <div id="cont_niveles" style="width:362px; margin:0 0 0 145px; position: absolute;">
+                        
+                        <div class="niveles" id="n_super"  style="width:104px; height:58px; position:relative; margin:0 auto; padding:0; ">
+                            <img src="img/niveles_super.png" border="0" height="58" style=" margin-top:2px"/>
+                        </div>
+                        <div class="niveles" id="n_alto" style="width:189px; height:47px; position:relative; margin:0 auto; padding:0; ">
+                            <img src="img/niveles_alto.png" border="0" height="47" style=" margin-top:1px"/>
+                        </div>  
+                        
+                        <div class="niveles" id="n_normal" style="width:326px;height:152px; position:relative; margin:0 auto; padding:0; ">
+                            <img src="img/niveles_normal.png" border="0" height="152" />
+                        </div>
+                        
+                        <div class="niveles" id="n_emergente" style="width:191px; height:50px; position:relative; margin:0 auto;">
+                            <img src="img/niveles_emergente.png" border="0" height="50" width="191" style="margin-left:-1px; margin-top:-1px" />
+                        </div> 
+                        
+                        <div class="niveles" id="n_deficiente" style="width:102px; height:56px; position:relative; margin:0 auto; ">
+                            <img src="img/niveles_deficiente.png" border="0" height="56" style="margin-left:-1px; margin-top:-3px" />
+                        </div>     
+                        
+                    </div>
+                </div>
+                <div class="button" align="center" onClick="btn_ocultar_rombo()">
+                    Regresar
+                </div>      
+            </div>
+
+        </div>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default hand" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary hand">Excel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--  DIV que aparece cuando inicia una llamada AJAX -->
+<div class="growlUI_msg" style="display:none;   ">
+    <table border="0"   width="100%">
+    <tr>
+        <td width="46">
+            <span id="growlUI_icono">  </span>
+        </td>
+        <td align="left">
+            <span id="growlUI_msg_txt" class="negritas">  </span>
+        </td>
+    </tr>
+    </table>        
+</div>
+
+<% include footer %>

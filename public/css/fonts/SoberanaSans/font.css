@@ -1,0 +1,12 @@
+@font-face {
+  font-family: 'SoberanaSans-Regular';
+  src: url('SoberanaSans-Regular.eot');
+  src: url('SoberanaSans-Regular.woff2') format('woff2'),
+       url('SoberanaSans-Regular.woff') format('woff'),
+       url('SoberanaSans-Regular.ttf') format('truetype'),
+       url('SoberanaSans-Regular.svg#SoberanaSans-Regular') format('svg'),
+       url('SoberanaSans-Regular.eot?#iefix') format('embedded-opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
