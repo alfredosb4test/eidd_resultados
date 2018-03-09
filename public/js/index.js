@@ -985,7 +985,7 @@ $(document).ready(function(){
                     $("#"+graf_activa).show();                
              
                 }
-   
+    
                 $("#contenido_resul").append(datos);
                 //$("#grafica").show().appendTo($("#contenido_resul"));
                 //$("#grafica_bar").css("display", "table");

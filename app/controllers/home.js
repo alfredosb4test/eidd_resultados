@@ -1493,8 +1493,7 @@ router.get('/detalles_usr_brechaxnivel_jerarquico', function(req, res, next) {
 				FROM tbl_brechas bre, tbl_ficha_2
 				WHERE bre.id_empleado = tbl_ficha_2.num_empleado AND unidad_negocio IN(${$usr_ag}) ${$unidad_permisos} AND 
 				bre.puesto_nivel='${$puesto_nivel}' AND ${$campo_competencia}=1`;
-
-
+ 
 	console.log("SQL resultados_eidd_detalles_usr_vs: "+$sql); 
     connectionManager.getConnection()
         .then(function (connection) {
