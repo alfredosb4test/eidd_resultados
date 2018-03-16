@@ -8,6 +8,7 @@ var express = require('express'),
 	flash = require('connect-flash'), // enviar msg de error en el login
 	date = require('date-and-time'),
 	dns = require('dns');
+	
 
  
 var $;
@@ -1095,7 +1096,7 @@ router.get('/resultados_x_brechasxnivel', function(req, res, next) {
 				SUM(negociacion) AS negociacion,
 				SUM(toma_decisiones) AS toma_decisiones,
 				COUNT(id_empleado) AS personal_formar,
-				total_brechas
+				SUM(total_brechas) AS total_brechas
 			FROM tbl_brechas
 			WHERE unidad_negocio IN (${$usr_ag}) ${$unidad_permisos}
 			GROUP BY puesto_nivel`; 
@@ -1197,8 +1198,163 @@ router.get('/resultados_x_brechasxUA', function(req, res, next) {
 			});
 		});	
 });
+router.get('/resultados_x_brechasxpers', function(req, res, next) {
+	// $usr_ag, $ambito, $perfil_final_2012_2013, $perfil_final, $descripcion_unidad_permisos, $g_nivel, $orderby='ORDER BY vs.nombre'
+ 	$descripcion_unidad_permisos = req.session.g_unidades_permisos;
+	$g_nivel = req.session.g_nivel;	
+	$usr_ag = req.query.usr_ag;
+
+	if($usr_ag == 'GENERAL'){
+		$usr_ag = $gerales;
+		$txtusr_ag = "'GENERAL'";
+	}
+	else{
+		$usr_ag = $usr_ag;
+		$txtusr_ag = $usr_ag;
+	}
+
+	if($descripcion_unidad_permisos == "'GENERAL'")
+		$unidad_permisos = "";
+	else{
+		if($descripcion_unidad_permisos.length >= 8 && $g_nivel != "Central_Local"){
+			$unidad_permisos = " AND id_ag IN("+$descripcion_unidad_permisos+")";
+			$descripcion_unidad = 'cat_ag.descripcion_unidad_admin as descripcion_unidad';	// Ver la Administracion
+		}
+		else{
+			$unidad_permisos = " AND id_ag_4 IN("+$descripcion_unidad_permisos+")";
+			$descripcion_unidad = 'cat_ag.ag as descripcion_unidad';	// Ver a Central
+		}
+	}	
+
+		$g_unidades_permisos = req.session.g_unidades_permisos;	
+		console.log("g_unidades_permisos: "+$g_unidades_permisos);
+		$n_unidades = ($descripcion_unidad_permisos != "'GENERAL'") ? $descripcion_unidad_permisos.split(" ").length : 2;	
+
+		if($n_unidades == 1 ){
+			$sql = `SELECT ${ $txtusr_ag } as ag, (SELECT cat_ag.ag FROM cat_ag WHERE id_unidadDepto IN (${ $descripcion_unidad_permisos })) as descripcion_unidad, 
+					(SELECT COUNT(id_empleado) as AGA FROM tbl_brechas 
+					WHERE unidad_negocio IN (${ $usr_ag }) AND  total_brechas in (1,2,3,4,5,6,7,8,9) ${ $unidad_permisos }) AS total,
+					IFNULL(( SELECT COUNT(id_empleado) as AGA FROM tbl_brechas 
+					WHERE unidad_negocio IN (${ $usr_ag }) AND total_brechas=1 ${ $unidad_permisos }),0) AS trabajo_equipo,
+					IFNULL(( SELECT COUNT(id_empleado) as AGA FROM tbl_brechas 
+					WHERE unidad_negocio IN (${ $usr_ag }) AND total_brechas=2 ${ $unidad_permisos }),0) AS comunicacion,
+					IFNULL(( SELECT COUNT(id_empleado) as AGA FROM tbl_brechas 
+					WHERE unidad_negocio IN (${ $usr_ag }) AND total_brechas=3 ${ $unidad_permisos }),0) AS actitud_servicio,
+					IFNULL(( SELECT COUNT(id_empleado) as AGA FROM tbl_brechas 
+					WHERE unidad_negocio IN (${ $usr_ag }) AND total_brechas=4 ${ $unidad_permisos }),0) AS orientacion_resultados,
+					IFNULL(( SELECT COUNT(id_empleado) as AGA FROM tbl_brechas 
+					WHERE unidad_negocio IN (${ $usr_ag }) AND total_brechas=5 ${ $unidad_permisos }),0) AS analisis_problemas,
+					IFNULL(( SELECT COUNT(id_empleado) as AGA FROM tbl_brechas 
+					WHERE unidad_negocio IN (${ $usr_ag }) AND total_brechas=6 ${ $unidad_permisos }),0) AS liderazgo,
+					IFNULL(( SELECT COUNT(id_empleado) as AGA FROM tbl_brechas 
+					WHERE unidad_negocio IN (${ $usr_ag }) AND total_brechas=7 ${ $unidad_permisos }),0) AS organizacion,
+					IFNULL(( SELECT COUNT(id_empleado) as AGA FROM tbl_brechas 
+					WHERE unidad_negocio IN (${ $usr_ag }) AND total_brechas=8 ${ $unidad_permisos }),0) AS negociacion,
+					IFNULL(( SELECT COUNT(id_empleado) as AGA FROM tbl_brechas 
+					WHERE unidad_negocio IN (${ $usr_ag }) AND total_brechas=9 ${ $unidad_permisos }),0) AS toma_decisiones`;
+
+		}else{	
+			$sql = `SELECT ${ $txtusr_ag } as ag, (SELECT COUNT(id_empleado) as AGA FROM tbl_brechas 
+					WHERE unidad_negocio IN (${ $usr_ag }) AND  total_brechas in (1,2,3,4,5,6,7,8,9) ${ $unidad_permisos } AND puesto_nivel != 'Administrador Central' AND puesto_nivel != 'Administrador General' ) AS total,
+					IFNULL(( SELECT COUNT(id_empleado) as AGA FROM tbl_brechas 
+					WHERE unidad_negocio IN (${ $usr_ag }) AND total_brechas=1 ${ $unidad_permisos } AND puesto_nivel != 'Administrador Central' AND puesto_nivel != 'Administrador General' ),0) AS trabajo_equipo,
+					IFNULL(( SELECT COUNT(id_empleado) as AGA FROM tbl_brechas 
+					WHERE unidad_negocio IN (${ $usr_ag }) AND total_brechas=2 ${ $unidad_permisos } AND puesto_nivel != 'Administrador Central' AND puesto_nivel != 'Administrador General' ),0) AS comunicacion,
+					IFNULL(( SELECT COUNT(id_empleado) as AGA FROM tbl_brechas 
+					WHERE unidad_negocio IN (${ $usr_ag }) AND total_brechas=3 ${ $unidad_permisos } AND puesto_nivel != 'Administrador Central' AND puesto_nivel != 'Administrador General' ),0) AS actitud_servicio,
+					IFNULL(( SELECT COUNT(id_empleado) as AGA FROM tbl_brechas 
+					WHERE unidad_negocio IN (${ $usr_ag }) AND total_brechas=4 ${ $unidad_permisos } AND puesto_nivel != 'Administrador Central' AND puesto_nivel != 'Administrador General' ),0) AS orientacion_resultados,
+					IFNULL(( SELECT COUNT(id_empleado) as AGA FROM tbl_brechas 
+					WHERE unidad_negocio IN (${ $usr_ag }) AND total_brechas=5 ${ $unidad_permisos } AND puesto_nivel != 'Administrador Central' AND puesto_nivel != 'Administrador General' ),0) AS analisis_problemas,
+					IFNULL(( SELECT COUNT(id_empleado) as AGA FROM tbl_brechas 
+					WHERE unidad_negocio IN (${ $usr_ag }) AND total_brechas=6 ${ $unidad_permisos } AND puesto_nivel != 'Administrador Central' AND puesto_nivel != 'Administrador General' ),0) AS liderazgo,
+					IFNULL(( SELECT COUNT(id_empleado) as AGA FROM tbl_brechas 
+					WHERE unidad_negocio IN (${ $usr_ag }) AND total_brechas=7 ${ $unidad_permisos } AND puesto_nivel != 'Administrador Central' AND puesto_nivel != 'Administrador General' ),0) AS organizacion,
+					IFNULL(( SELECT COUNT(id_empleado) as AGA FROM tbl_brechas 
+					WHERE unidad_negocio IN (${ $usr_ag }) AND total_brechas=8 ${ $unidad_permisos } AND puesto_nivel != 'Administrador Central' AND puesto_nivel != 'Administrador General' ),0) AS negociacion,
+					IFNULL(( SELECT COUNT(id_empleado) as AGA FROM tbl_brechas 
+					WHERE unidad_negocio IN (${ $usr_ag }) AND total_brechas=9 ${ $unidad_permisos } AND puesto_nivel != 'Administrador Central' AND puesto_nivel != 'Administrador General' ),0) AS toma_decisiones`;
+		} 
 
 
+	console.log("SQL detalles_usr_brechaxpers: "+$sql); 
+    connectionManager.getConnection()
+        .then(function (connection) {
+
+            connection.query($sql, function (error, results) {
+                if (error) 
+                    console.error(error);   
+				
+				numRows = results.length; 
+				console.log(results[0]);
+				if(numRows){
+	                var proj = JSON.stringify(results);
+	                console.log(proj); 
+					res.json(proj);	
+				}	
+				connection.end(); 
+			});
+		});	
+});
+
+
+router.get('/resultados_x_ficha', function(req, res, next) {
+	// $usr_ag, $ambito, $perfil_final_2012_2013, $perfil_final, $descripcion_unidad_permisos, $g_nivel, $orderby='ORDER BY vs.nombre'
+ 	$descripcion_unidad_permisos = req.session.g_unidades_permisos;
+	$g_nivel = req.session.g_nivel;	
+	$g_NumEmp = req.session.g_NumEmp;	
+	$usr_ag = req.query.usr_ag;
+	$num_emp = req.query.num_emp;
+	
+
+	if($usr_ag == 'GENERAL'){
+		$usr_ag = $gerales;
+	}
+	else{
+		$usr_ag = $usr_ag;
+	}
+
+	if($descripcion_unidad_permisos == "'GENERAL'")
+		$unidad_permisos = "";
+	else{
+		if($descripcion_unidad_permisos.length >= 8 && $g_nivel != "Central_Local"){
+			$unidad_permisos = " AND id_ag IN("+$descripcion_unidad_permisos+")";
+		}
+		else{
+			$unidad_permisos = " AND id_ag_4 IN("+$descripcion_unidad_permisos+")";
+		}
+	}
+
+		$sql = `SELECT *, IFNULL((SELECT num_empleado FROM tbl_ficha_1
+					 WHERE num_empleado = ${ $num_emp } ${ $unidad_permisos }  AND ag IN (${ $usr_ag })),'no_permisos') AS permiso 
+					 FROM tbl_ficha_1 
+					 WHERE num_empleado = ${ $num_emp }`;
+		if($num_emp == $g_NumEmp)
+			$sql = `SELECT *, IFNULL((SELECT num_empleado FROM tbl_ficha_1
+					 WHERE num_empleado = ${ $num_emp }),'no_permisos') AS permiso 
+					 FROM tbl_ficha_1
+					 WHERE num_empleado = ${ $num_emp }`;
+
+	console.log("SQL resultados_x_ficha: "+$sql); 
+    connectionManager.getConnection()
+        .then(function (connection) {
+
+            connection.query($sql, function (error, results) {
+                if (error) 
+                    console.error(error);   
+				
+				numRows = results.length; 
+				console.log(results[0]);
+				if(numRows){
+	                var proj = JSON.stringify(results);
+	                console.log(proj); 
+					res.json(proj);	
+				}else
+					return res.json('[{"error":"Sin resultados"}]');	
+				connection.end(); 
+			});
+		});
+});
 /***************************************************************************************************************/
 // Detalles de los usuarios en PupUp
 // buscar los empleados de a cuerdo a la Unidad Administrativa y el perfil solicitado (poppup)
@@ -1567,6 +1723,66 @@ router.get('/detalles_usr_brechaxUA', function(req, res, next) {
 		});	
 });
 
+router.get('/detalles_usr_brechasxpers', function(req, res, next) {
+	// $usr_ag, $ambito, $perfil_final_2012_2013, $perfil_final, $descripcion_unidad_permisos, $g_nivel, $orderby='ORDER BY vs.nombre'
+	$usr_ag = req.query.usr_ag;
+	$ambito = req.query.ambito;
+	$descripcion_unidad_permisos  = req.query.descripcion_unidad; 	
+	$perfil_final  = req.query.perfil_final;	
+	$puesto_nivel = req.query.puesto_nivel;	
+	$g_nivel = req.session.g_nivel;	
+	$orderby = "ORDER BY niv.nombre";	
+ 	$brecha = req.query.brecha;	
+ 
+
+		if($usr_ag == 'GENERAL')
+			$usr_ag = $gerales;
+		else
+			$usr_ag = $usr_ag;
+
+		if($descripcion_unidad_permisos == "'GENERAL'")
+			$unidad_permisos = "";
+		else{
+			if($descripcion_unidad_permisos.length >= 8 && $g_nivel != "Central_Local")
+				$unidad_permisos = "AND tbl_ficha_2.id_ag IN("+$descripcion_unidad_permisos+")";
+			else{ 
+				if($g_nivel == 'Central_Local')
+					$unidad_permisos = "AND (tbl_ficha_2.id_ag_4 IN("+$descripcion_unidad_permisos+") )";
+				if($g_nivel == 'Central' || $g_nivel == 'Local')
+					$unidad_permisos = "AND tbl_ficha_2.id_ag_4 IN("+$descripcion_unidad_permisos+")";					
+			}
+		}	
+
+		if($g_nivel == "General")
+			$unidad_permisos = "";
+				 
+		$sql = `SELECT bre.id_empleado, bre.nombre, bre.puesto_nivel, tbl_ficha_2.descripcion_unidad_admin as desc_unidad , tbl_ficha_2.puesto_nivel as puesto_nivel2  
+			    FROM tbl_brechas  bre, tbl_ficha_2
+				WHERE bre.id_empleado = tbl_ficha_2.num_empleado AND bre.unidad_negocio IN (${ $usr_ag }) ${ $unidad_permisos }  AND bre.total_brechas=${ $brecha }`;
+			
+
+
+	console.log("SQL detalles_usr_brechaxUA: "+$sql); 
+    connectionManager.getConnection()
+        .then(function (connection) {
+
+            connection.query($sql, function (error, results) {
+                if (error) 
+                    console.error(error);   
+				
+				numRows = results.length; 
+				console.log(results[0]);
+				if(numRows){
+	                var proj = JSON.stringify(results);
+	                console.log(proj); 
+					res.json(proj);	
+				}	
+				connection.end(); 
+			});
+		});	
+});
+
+
 router.get('/grafica_rombo', function(req, res, next) {
 	console.log('grafica_rombo1 ')
 	//$nivel = $("#txt_perfil_final").val();
@@ -1575,5 +1791,65 @@ router.get('/grafica_rombo', function(req, res, next) {
 					                	res.json(update_r);		
 });
 
+var PDF  = require('pdfkit');
+var fs = require('fs');
+var path = require('path')
+router.get('/pdf', function(req, res, next) {
+	var pdf = require('html-pdf');
+	rootPath = path.normalize(__dirname + '/../../public');
+	var options = { format: 'Letter' };
+
+	$html = `     
+	<table border="0" width="100%">
+     <tr bgcolor="#7E8372" >
+        <td align="center" height="25" colspan="2" ><font color="#FFFFFF"><strong>DATOS GENERALES</strong></font></td>
+     </tr> 
+     <tr>
+        <td  width="200"><strong>Nombre</strong></td><td width="430">nombre</td>
+     </tr>
+     <tr>   
+        <td ><strong>RFC</strong></td><td>rfc</td>
+     </tr>
+     <tr>   
+        <td ><strong>Edad</strong></td><td>edad</td>
+     </tr>
+     <!--
+     <tr>       
+        <td ><strong>Grado</strong></td><td>nivel</td>
+     </tr>
+     -->
+     <tr>       
+        <td ><strong>Sexo</strong></td><td>sexo</td>
+     </tr>
+     <tr>       
+        <td ><strong>Antig&uuml;edad</strong></td><td>antiguedad</td>
+     </tr>
+     </table> `;	
+	pdf.create($html).toFile(rootPath+'/ficha.pdf', function(err, res_pdf){
+ 
+
+	  	console.log(res_pdf.filename);
+ 		res.attachment('ficha.pdf');
+		res.sendFile(rootPath+'/ficha.pdf');
+	});	
+	
+});
+router.get('/pdf2', function(req, res, next) {
+
+	rootPath = path.normalize(__dirname + '/../../public');
+	var text = 'ANY_TEXT_YOU_WANT_TO_WRITE_IN_PDF_DOC';
 
 
+	doc = new PDF();                        //creating a new PDF object
+	var stream = doc.pipe(fs.createWriteStream(rootPath+'/ficha.pdf'));  //creating a write stream 
+	            //to write the content on the file system
+	doc.text('<h1>Test</h1><p>Hello world</p>');             //adding the text to be written, 
+	doc.end(); //we end the document writing.
+	//res.sendFile(path.join(__dirname, i'/', 'output.pdf'));
+	console.log('pdf ',rootPath+'/ficha.pdf');
+	stream.on('finish', function() {
+ 		res.attachment('ficha.pdf');
+		res.sendFile(rootPath+'/ficha.pdf');
+	});
+
+});

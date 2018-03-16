@@ -24,8 +24,8 @@
     	 <div id="bar_menu" style="position:relative; width:84%; height:28px; float:left; top:1px;">
          		<div class="btn_menu" id="btn_unidad" align="center"><span class="contenido_menu">Por Unidad</span></div>
                 <div class="btn_menu" id="btn_elemento" align="center"><span class="contenido_menu">Por Elemento</span></div>
-         		<div class="btn_menu" id="btn_vs" align="center"><span class="contenido_menu">Comp. <span class="font_small1">2014 vs 2015</span></span></div>
-                <div class="btn_menu" id="btn_nivel" align="center"><span class="contenido_menu">Resumen por Nivel</span></div>         		
+         		<div class="btn_menu" id="btn_vs" align="center"><span class="contenido_menu">Comp. <span class="font_small1">2016 vs 2017</span></span></div>
+                <div class="btn_menu" id="btn_nivel" align="center"><span class="contenido_menu">Resumen por NJ</span></div>         		
                 <div class="btn_menu" id="btn_brechasxadmin" align="center"><span class="contenido_menu">Brechas por UA</span></div>
                 <div class="btn_menu" id="btn_brechasxnivel" align="center"><span class="contenido_menu">Brechas por NJ</span></div>         		
                 <div class="btn_menu" id="btn_brechasxpers" align="center"><span class="contenido_menu">Brecha (Personal)</span></div>
@@ -131,8 +131,8 @@
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default hand" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary hand">Excel</button>
+        <button type="button" class="btn btn-secondary hand" data-dismiss="modal">Cerrar</button>
+        
       </div>
     </div>
   </div>
@@ -160,7 +160,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default hand" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary hand">Excel</button>
+         
       </div>
     </div>
   </div>
@@ -274,3 +274,68 @@
     </tr>
     </table>        
 </div>
+
+/*********************************************************************************************************************************************/
+/********************************************************* Buscar xFicha  *********************************************************************/
+
+/*********************************************************    *********************************************************************/
+/*********************************************************************************************************************************************/
+<div id="wrap_ficha" style="display: none">
+    <div id="cont_ficha" style="display: none">
+
+        <div class="input-group">
+        <div class="input-group-prepend">
+          <div class="input-group-text" id="btnGroupAddon"># Empleado</div>
+        </div>
+        <input type="text" class="form-control" placeholder="Numero de Empleado" id="num_emp_ficha" onkeypress="enter_key_buscar(event)">
+        </div>  
+    </div>
+</div>    
+/*********************************************************************************************************************************************/
+/********************************************************* Resultados FICHA  *********************************************************************/
+
+/********************************************************* Resultados FICHA  *********************************************************************/
+/*********************************************************************************************************************************************/
+<div id="wrap_res_ficha" style="display: none">
+    <div id="cont_res_ficha" style="display: none">
+        <ul class="nav nav-tabs nav-justified bg-info" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link t_blanco active" data-toggle="tab" href="#panel5" role="tab"> DATOS GENERALES</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link t_blanco" data-toggle="tab" href="#panel6" role="tab"> DATOS DEL PUESTO</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link t_blanco" data-toggle="tab" href="#panel7" role="tab"> COMPETENCIAS 360</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link t_blanco" data-toggle="tab" href="#panel7" role="tab"> BRECHA POR ROL</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link t_blanco" data-toggle="tab" href="#panel7" role="tab"> HISTORIAL</a>
+            </li>                
+        </ul>
+        <!-- Tab panels -->
+        <div class="tab-content">
+            <!--Panel 1-->
+            <div class="tab-pane fade in show active" id="panel5" role="tabpanel">
+                <br>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil odit magnam minima, soluta doloribus reiciendis molestiae placeat unde eos molestias. Quisquam aperiam, pariatur. Tempora, placeat ratione porro voluptate odit minima.</p>
+            </div>
+            <!--/.Panel 1-->
+            <!--Panel 2-->
+            <div class="tab-pane fade" id="panel6" role="tabpanel">
+                <br>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil odit magnam minima, soluta doloribus reiciendis molestiae placeat unde eos molestias. Quisquam aperiam, pariatur. Tempora, placeat ratione porro voluptate odit minima.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil odit magnam minima, soluta doloribus reiciendis molestiae placeat unde eos molestias. Quisquam aperiam, pariatur. Tempora, placeat ratione porro voluptate odit minima.</p>
+            </div>
+            <!--/.Panel 2-->
+            <!--Panel 3-->
+            <div class="tab-pane fade" id="panel7" role="tabpanel">
+                <br>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil odit magnam minima, soluta doloribus reiciendis molestiae placeat unde eos molestias. Quisquam aperiam, pariatur. Tempora, placeat ratione porro voluptate odit minima.</p>
+            </div>
+            <!--/.Panel 3-->
+        </div>
+    </div> 
+</div>        

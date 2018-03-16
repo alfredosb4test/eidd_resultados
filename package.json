@@ -20,6 +20,7 @@
     "formidable": "^1.0.17",
     "glob": "^6.0.4",
     "grunt-contrib-clean": "^1.0.0",
+    "html-pdf": "^2.2.0",
     "jade": "^1.11.0",
     "jquery": "^3.2.1",
     "jsdom": "^11.5.1",
@@ -30,12 +31,16 @@
     "morgan": "^1.6.1",
     "mysql": "~2.6.1",
     "node-excel-export": "^1.2.0",
+    "node-wkhtmltopdf": "^2.0.0",
     "node-zip": "^1.1.1",
     "passport": "latest",
     "passport-local": "latest",
+    "pdfkit": "^0.8.3",
+    "pdfkitjs": "0.0.5",
     "q": "latest",
     "sequelize": "~2.1.0",
-    "serve-favicon": "^2.3.0"
+    "serve-favicon": "^2.3.0",
+    "wkhtmltopdf": "^0.3.4"
   },
   "devDependencies": {
     "grunt": "^1.0.1",
